@@ -1,3 +1,7 @@
+# Messaging between L1 and Arbitrum
+
+Arbitrum messagine based off [this write up by OffChain Labs](https://developer.offchainlabs.com/docs/l1_l2_messages)
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
