@@ -2,6 +2,12 @@
 
 Arbitrum messagine based off [this write up by OffChain Labs](https://developer.offchainlabs.com/docs/l1_l2_messages)
 
+## References
+- https://github.com/makerdao/arbitrum-dai-bridge
+- https://github.com/across-protocol/contracts-v1
+- https://github.com/OffchainLabs/arbitrum-tutorials/tree/master/packages/greeter
+
+
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
