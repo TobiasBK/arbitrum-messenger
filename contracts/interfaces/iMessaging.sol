@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-//COPIED FROM: https://github.com/across-protocol/contracts-v1/blob/master/contracts/insured-bridge/interfaces/MessengerInterface.sol
-pragma solidity ^0.8.0;
+//SPDX-License-Identifier: MIT
+pragma solidity >=0.8.4 <0.9.0;
 
+//=======MESSAGING INTERFACE=======//
 /**
  * @notice Sends cross chain messages to contracts on a specific L2 network. The `relayMessage` implementation will
  * differ for each L2.
