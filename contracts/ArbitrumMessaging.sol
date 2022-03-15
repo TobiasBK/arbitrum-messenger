@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4 <0.9.0;
 
-import "./interfaces/iMessaging.sol";
+import "./interfaces/MessengerInterface.sol";
 import "./ArbitrumCrossDomainEnabled.sol";
 //import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ArbitrumMessaging is iMessaging, ArbitrumCrossDomainEnabled {
+abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEnabled {
 
     //=======EVENTS=======//
 
@@ -20,7 +20,7 @@ contract ArbitrumMessaging is iMessaging, ArbitrumCrossDomainEnabled {
         uint256 maxSubmissionCost,
         bytes data
     );
-    event RetryableTicketCreated(uint256 id);
+    event RetryableTicketCreated(address indexed from, address indexed to, uint256 indexed seqNum, bytes data);
 
     //=======CONSTRUCTOR=======//
 
@@ -33,19 +33,19 @@ contract ArbitrumMessaging is iMessaging, ArbitrumCrossDomainEnabled {
         address target,
         address userToRefund,
         uint256 l1CallValue,
+        uint256 maxSubmissionCost,
         uint256 gasLimit,
         uint256 gasPrice,
-        uint256 maxSubmissionCost,
-        bytes memory _message
-    ) external payable override {
+        bytes memory message
+    ) external payable {
 
-        uint256 seqNumber =
+        uint256 ticketNum =
             sendTxToL2NoAliasing(target, userToRefund, l1CallValue, maxSubmissionCost, gasLimit, gasPrice, message);
 
         emit RetryableTicketCreatedWithNoAliasing(
             msg.sender,
             target,
-            seqNumber,
+            ticketNum,
             userToRefund,
             l1CallValue,
             gasLimit,
@@ -59,26 +59,17 @@ contract ArbitrumMessaging is iMessaging, ArbitrumCrossDomainEnabled {
     //If you don't know the L2 target address, use this function.
     function MessageWithAliasing(
         address target,
-        address user,
+        address userToRefund,
         uint256 maxSubmissionCost,
-        uint256 maxGas,
-        uint256 gasPriceBid,
+        uint256 gasLimit,
+        uint256 gasPrice,
         bytes memory data
         ) external payable returns(uint256) {
 
-        uint256 ticketId = inbox.createRetryableTicket{value: msg.value}(
-            l2Target,
-            0, // we always assume that l2CallValue = 0???
-            maxSubmissionCost,
-            msg.sender,
-            msg.sender,
-            gasLimit,
-            gasPrice,
-            message
-        );
+        uint256 ticketNum = sendTxToL2(target, userToRefund, maxSubmissionCost, gasLimit, gasPrice, data);
 
-        emit RetryableTicketCreated(user, target, ticketId, data);
+        emit RetryableTicketCreated(msg.sender, target, ticketNum, data);
 
-        return ticketId;
+        return ticketNum;
     }
 }

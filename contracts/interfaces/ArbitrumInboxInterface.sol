@@ -1,9 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4 <0.9.0;
 
+import "./BridgeInterface.sol";
+
 //INBOX INTERFACE
 
-interface iArbitrum_Inbox {
+interface ArbitrumInboxInterface is BridgeInterface {
     // Retryable tickets are the Arbitrum protocol’s canonical method for passing generalized messages from Ethereum to
     // Arbitrum. A retryable ticket is an L2 message encoded and delivered by L1; if gas is provided, it will be executed
     // immediately. If no gas is provided or the execution reverts, it will be placed in the L2 retry buffer,
@@ -37,7 +39,7 @@ interface iArbitrum_Inbox {
 
     function depositEth(uint256 maxSubmissionCost) external payable returns (uint256);
 
-    function bridge() external view returns (IBridge);
+    function bridge() external view returns (BridgeInterface);
 
     function pauseCreateRetryables() external;
 

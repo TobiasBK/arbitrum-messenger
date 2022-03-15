@@ -3,8 +3,8 @@ pragma solidity >=0.8.4 <0.9.0;
 
 //COPIED & MODIFIED FROM: https://github.com/makerdao/arbitrum-dai-bridge/blob/34acc39bc6f3a2da0a837ea3c5dbc634ec61c7de/contracts/arbitrum/IBridge.sol
 
-
-interface IBridge {
+interface BridgeInterface {
+  
   event MessageDelivered(
     uint256 indexed messageIndex,
     bytes32 indexed beforeInboxAcc,
