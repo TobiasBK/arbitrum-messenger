@@ -8,6 +8,7 @@ This article covers the details [this write up by OffChain Labs](https://develop
 - https://github.com/makerdao/arbitrum-dai-bridge
 - https://github.com/across-protocol/contracts-v1
 - https://github.com/OffchainLabs/arbitrum-tutorials/tree/master/packages/greeter
+- https://github.com/livepeer/arbitrum-lpt-bridge
 - On L2 aliasing: https://developer.offchainlabs.com/docs/l1_l2_messages#address-aliasing
 
 ### On testing
