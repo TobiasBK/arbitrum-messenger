@@ -1,6 +1,8 @@
 # Messaging between L1 and Arbitrum
 
-Arbitrum messagine based off [this write up by OffChain Labs](https://developer.offchainlabs.com/docs/l1_l2_messages)
+How to pass a message from L1 Ethereum to L2 Arbitrum? 
+
+This article covers the details [this write up by OffChain Labs](https://developer.offchainlabs.com/docs/l1_l2_messages)
 
 ## References
 - https://github.com/makerdao/arbitrum-dai-bridge
