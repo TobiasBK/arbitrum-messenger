@@ -10,6 +10,10 @@ This article covers the details [this write up by OffChain Labs](https://develop
 - https://github.com/OffchainLabs/arbitrum-tutorials/tree/master/packages/greeter
 - On L2 aliasing: https://developer.offchainlabs.com/docs/l1_l2_messages#address-aliasing
 
+### On testing
+- https://github.com/makerdao/arbitrum-dai-bridge/tree/master/test
+- https://github.com/across-protocol/contracts-v1/blob/master/test/insured-bridge/ArbitrumMessenger.js
+
 
 # Advanced Sample Hardhat Project
 
