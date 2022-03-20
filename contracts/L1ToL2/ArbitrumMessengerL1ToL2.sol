@@ -1,11 +1,10 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4 <0.9.0;
 
-import "./interfaces/MessengerInterface.sol";
-import "./ArbitrumCrossDomainEnabled.sol";
-//import "@openzeppelin/contracts/access/Ownable.sol";
+import "../ArbitrumCrossDomainEnabled.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEnabled {
+contract ArbitrumMessengerL1ToL2 is ArbitrumCrossDomainEnabled, Ownable {
 
     //=======EVENTS=======//
 
@@ -21,15 +20,16 @@ abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEn
         bytes data
     );
     event RetryableTicketCreated(address indexed from, address indexed to, uint256 indexed seqNum, bytes data);
+    event EthDeposited(address indexed from, uint256 indexed seqNum, uint256 indexed amount);
 
     //=======CONSTRUCTOR=======//
 
     constructor(address _arbitrumInbox) ArbitrumCrossDomainEnabled(_arbitrumInbox) {}
 
-     //=======FUNCTIONS=======//
+    //=======OWNABLE FUNCTIONS=======//
 
     //If you know the L2 target address in advance,then don't need to alias an L1 address. So use this function.
-     function MessageWithNoAliasing(
+     function MessageToL2WithNoAliasing(
         address target,
         address userToRefund,
         uint256 l1CallValue,
@@ -37,7 +37,7 @@ abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEn
         uint256 gasLimit,
         uint256 gasPrice,
         bytes memory message
-    ) external payable {
+    ) external payable onlyOwner returns(uint256) {
 
         uint256 ticketNum =
             sendTxToL2NoAliasing(target, userToRefund, l1CallValue, maxSubmissionCost, gasLimit, gasPrice, message);
@@ -54,17 +54,19 @@ abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEn
             message
         );
 
+        return ticketNum;
+
     }
 
     //If you don't know the L2 target address, use this function.
-    function MessageWithAliasing(
+    function MessageToL2WithAliasing(
         address target,
         address userToRefund,
         uint256 maxSubmissionCost,
         uint256 gasLimit,
         uint256 gasPrice,
         bytes memory data
-        ) external payable returns(uint256) {
+        ) external payable onlyOwner returns(uint256) {
 
         uint256 ticketNum = sendTxToL2(target, userToRefund, maxSubmissionCost, gasLimit, gasPrice, data);
 
@@ -72,4 +74,19 @@ abstract contract ArbitrumMessaging is MessengerInterface, ArbitrumCrossDomainEn
 
         return ticketNum;
     }
+
+    // /// @dev The standard method to send messages from L1 to Arbitrum.
+    // function depositEthL1ToL2(uint256 maxSubmissionCost)
+    //     external
+    //     payable
+    //     onlyOwner
+    //     returns (uint256)
+    // {
+    //     uint256 ticketNum = depositEthToL2{value: msg.value}(
+    //         maxSubmissionCost
+    //     );
+
+    //     emit EthDeposited(msg.sender, ticketNum, msg.value);
+    //     return ticketNum;
+    // }
 }

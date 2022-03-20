@@ -1,28 +1,28 @@
+//COPIED & MODIFIED FROM: https://github.com/makerdao/arbitrum-dai-bridge/blob/34acc39bc6f3a2da0a837ea3c5dbc634ec61c7de/contracts/l1/L1CrossDomainEnabled.sol
+
 //SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity >=0.8.4 <0.9.0;
 
-//COPIED & MODIFIED FROM: https://github.com/makerdao/arbitrum-dai-bridge/blob/34acc39bc6f3a2da0a837ea3c5dbc634ec61c7de/contracts/l1/L1CrossDomainEnabled.sol
-
-import "./interfaces/ArbitrumInboxInterface.sol";
-import "./interfaces/ArbitrumOutboxInterface.sol";
-import "./interfaces/BridgeInterface.sol";
+import "./interfaces/IInbox.sol";
+import "./interfaces/IOutbox.sol";
+import "./interfaces/IBridge.sol";
 
 abstract contract ArbitrumCrossDomainEnabled {
-  ArbitrumInboxInterface public immutable arbitrumInbox;
+  IInbox public immutable arbitrumInbox;
 
-  event TxToL2(address indexed from, address indexed to, uint256 indexed seqNum, bytes data);
+  event TxToL2(address indexed from, address indexed to, uint256 indexed id, bytes data);
+  event EthDepositedToL2(address indexed from, uint256 indexed id);
 
   constructor(address _arbitrumInbox) {
-    arbitrumInbox =  ArbitrumInboxInterface(_arbitrumInbox);
+    arbitrumInbox =  IInbox(_arbitrumInbox);
   }
 
   modifier onlyL2Counterpart(address l2Counterpart) {
     // a message coming from the counterpart gateway was executed by the bridge
-    BridgeInterface bridge = BridgeInterface(arbitrumInbox.bridge());
+    IBridge bridge = IBridge(arbitrumInbox.bridge());
     require(msg.sender == address(bridge), "NOT_FROM_BRIDGE");
-
     // and the outbox reports that the L2 address of the sender is the counterpart gateway
-    address l2ToL1Sender = ArbitrumOutboxInterface(bridge.activeOutbox()).l2ToL1Sender();
+    address l2ToL1Sender = IOutbox(bridge.activeOutbox()).l2ToL1Sender();
     require(l2ToL1Sender == l2Counterpart, "ONLY_COUNTERPART_GATEWAY");
     _;
   }
@@ -69,6 +69,12 @@ abstract contract ArbitrumCrossDomainEnabled {
       data
     );
     emit TxToL2(user, target, seqNum, data);
+    return seqNum;
+  }
+
+  function depositEthToL2(uint256 maxSubmissionCost) internal returns(uint256) {
+    uint256 seqNum = arbitrumInbox.depositEth(maxSubmissionCost);
+    emit EthDepositedToL2(msg.sender, seqNum);
     return seqNum;
   }
 }
