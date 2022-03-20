@@ -1,25 +1,21 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
+//simple deployment
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const ArbitrumMessengerL1ToL2 = await hre.ethers.getContractFactory("ArbitrumMessengerL1ToL2");
+  const arbitrumMessengerL1ToL2 = await ArbitrumMessengerL1ToL2.deploy(ethers.constants.AddressZero); //temp l2 addr
 
-  await greeter.deployed();
+  await arbitrumMessengerL1ToL2.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("MessengerL1ToL2 deployed to:", arbitrumMessengerL1ToL2.address);
+
+  const ArbitrumMessengerL2ToL1 = await hre.ethers.getContractFactory("ArbitrumMessengerL2ToL1");
+  const arbitrumMessengerL2ToL1 = await ArbitrumMessengerL2ToL1.deploy(ethers.constants.AddressZero); //temp l2 addr
+
+  await arbitrumMessengerL2ToL1.deployed();
+
+  console.log("MessengerL2ToL1 deployed to:", arbitrumMessengerL2ToL1.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

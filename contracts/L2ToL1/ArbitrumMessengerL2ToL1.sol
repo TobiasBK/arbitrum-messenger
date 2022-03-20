@@ -5,7 +5,7 @@ import "../libraries/AddressAliasHelper.sol";
 import "../interfaces/IArbSys.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ArbitrumMessengerL1ToL2 is Ownable {
+contract ArbitrumMessengerL2ToL1 is Ownable {
     address public l1Target;
 
     //=======EVENTS=======//
